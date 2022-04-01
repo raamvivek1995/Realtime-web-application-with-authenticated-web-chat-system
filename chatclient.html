@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+	
+    <meta charset="utf-8">
+    <link rel=stylesheet href="https://udayton-cloud.bitbucket.io/style1.css">
+    <title>CCA-Test page of Vivek Manikandan</title>
+    <script src="https://udayton-cloud.bitbucket.io/clock.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script> 
+    <script>
+        var socketio = io();
+        </script>
+    <style>
+    
+    .owner{
+        background-color: #4CAF50;
+        font-family:calibri;
+        color: white;
+        padding: 5px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 12px;
+        margin: 4px 2px;
+        cursor: pointer;
+
+    }
+    #typinganimation {
+        display : none
+    }
+    .tiblock {
+    align-items: center;
+    display: flex;
+    height: 17px;
+    }
+
+    .ticontainer .tidot {
+        background-color: #90949c;
+    }
+
+    .tidot {
+        -webkit-animation: mercuryTypingAnimation 1.5s infinite ease-in-out;
+        border-radius: 2px;
+        display: inline-block;
+        height: 4px;
+        margin-right: 2px;
+        width: 4px;
+    }
+
+    @-webkit-keyframes mercuryTypingAnimation{
+    0%{
+    -webkit-transform:translateY(0px)
+    }
+    28%{
+    -webkit-transform:translateY(-5px)
+    }
+    44%{
+    -webkit-transform:translateY(0px)
+    }
+    }
+
+    .tidot:nth-child(1){
+    -webkit-animation-delay:200ms;
+    }
+    .tidot:nth-child(2){
+-webkit-animation-delay:300ms;
+    }
+    .tidot:nth-child(3){
+    -webkit-animation-delay:400ms;
+    }
+    .signin-page{
+        width: 360px;
+        padding: 8% 0 0;
+        margin: auto;
+    }
+    .waiting{
+        display: none;
+    }
+    .form{
+        position: relative;
+        z-index: 1;
+        background: #FFFFFF;
+        max-width: 360px;
+        margin: 0 auto 100px;
+        padding: 45px;
+        text-align: center;
+    }
+    .form .signup-form{
+        display: none;
+    }
+    .form .login-form{
+        display: block;
+    }
+    .formchat .chat-form{
+        display: none;
+    }
+
+    img {
+        border-radius: 50%;
+        width:40px;
+    }
+    .form input{
+        font-family: calibri;
+        outline: 0;
+        background: #f2f2f2;
+        width: 100%;
+        border: 0;
+        margin: 0 0 15px;
+        padding: 15px;
+        box-sizing: border-box;
+        font-size: 15px;
+    }
+    .form .button{
+        font-family: calibri;
+        text-transform: uppercase;
+        outline: 0;
+        background: #4CAF50;
+        width: 88%;
+        border: 0;
+        padding: 15px;
+        color: #FFFFFF;
+        font-size: 14px;
+        
+    }
+    .form .message{
+        margin: 15px;
+        color: #4CAF50;
+        text-decoration: none;
+    }
+    .button{
+        background-color: #c94c4c;
+        border: none;
+        color: white;
+        font-family:calibri;
+        padding: 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 12px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+    h2{color:white;
+   text-align:center;
+   font-family:calibri;}
+
+    h3{text-align:center;
+   font-family:calibri;}
+
+    p{text-align:center;
+  font-family:calibri;
+  font-size: 18px;}
+    .round{border-radius: 8px;}
+    #response{background-color: #ff9800;}
+
+</style>
+</head>
+<body>
+
+<div class="container wrapper">
+    <div id="top">
+    <div class= "owner">
+            <h2><b><u>CPS 592 CLOUD COMPUTING AND APPLICATION</u><b></h2>
+            <h1><b>A test webpage for cloud computing and applications - Project Sprint 3</b></h1>
+            <h2><b>By Vivek Manikandan & Arun Pravin Arunachalam Sakthivel</b></h2>
+    </div>
+            <!--div id = "email" onclick="showhideemail()">Show my email</div-->
+            <div id = "user"></div>
+            <script src = "email.js"></script>
+            <div id="welcome"></div>
+    </div>
+    <div class="wrapper">
+        <div id="menubar">
+            <p>Private Web Chat</p>
+            <canvas id ="analog-clock" width = "150" height = "150" style="background-color:#999"></canvas>
+            <div id="chat-sidebar"></div>
+        </div>
+          <div class = "formchat">
+                    <form class="chat-form">
+                        Chat message: <input name= "data" onKeypress = "checkEnter(event)" onkeyup="socketio.emit('typing')" id="data">
+                        <input class="button round" type= "button" value="Send" onclick="send()">
+                        <div id = "typing"></div>
+                        <div id="typinganimation">
+                            <div class="ticontainer">
+                                <div class="tiblock">typing.
+                                    <div class="tidot"></div>
+                                    <div class="tidot"></div>
+                                    <div class="tidot"></div>
+                                </div>
+                                </div>
+                        </div>
+                        <div id = "online"></div>
+                        <div id="response"></div>
+                    </form>
+        </div>
+        </div>
+      
+    <div id="main">
+            <div class = "signin-page">
+                <div class = "form">
+                    <form class = "Login-form">
+                        <input type = "text" placeholder = "Your Username" required id = "signin_username"/>
+                        <input type = "password" placeholder = "password" required id = "signin_password"/>
+                        <div class = "button" onclick="signin()">Login</div>
+                        <div class="waiting">
+                            <p class="message">Please wait ...</p>
+                            <div class="loader"></div>
+                        </div>
+                        <p class = "message">Not registered? <a href = "#" onclick = "$('.Login-form').hide();$('.signup-form').show()">create an account</a></p>
+                    </form>
+                    <form class="signup-form">
+                        <input type = "text" placeholder = "fullname" id = "fullname1">
+                        <input type = "text" placeholder = "username" id = "username1">
+                        <input type = "text" placeholder = "email address" id = "email1">
+                        <input type = "password" placeholder = "password" id = "password1">
+                        <div class = "button" onclick ="signup()" >create</div>
+                        <p class = "message">Already signedup? <a href='#' onclick = "$('.Login-form').show();$('.signup-form').hide()">Sign in</a> </p>
+                    </form>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+    <!--form action= "echo.php" method= "POST">
+      Chat message: <input name= "data" onKeypress = "checkEnter(event)" onkeyup="socketio.emit('typing')" id="data">
+      <input class="button round" type= "button" value="Send" onclick="send()">
+      <input class="button round" type= "button" value="jQuery Ajax GET" onclick="jQueryAjax()"-->
+      <!--input class="button round" type= "button" value="jQuery Ajax POST" onclick="jQueryAjaxPost()"-->
+<!--/form-->
+<script>
+    var canvas = document.getElementById("analog-clock");
+    var ctx = canvas.getContext("2d");
+    var radius = canvas.height / 2;
+    ctx.translate(radius, radius);
+    radius = radius * 0.90;
+    setInterval(drawClock, 1000);
+
+    function drawClock(){
+        drawFace(ctx, radius);
+        drawNumbers(ctx, radius);
+        drawTime(ctx, radius);
+    }
+    </script>
+    <script>
+        function send(){
+            var input = $("#data").val();
+            if (input.length == 0) return;
+            socketio.emit("message",input);
+            $("#data").val("");}
+
+            socketio.on("message" ,(data) => {
+                $("#response").append(data + "<br>");
+            });
+            socketio.on("typing", function(data){
+                //$("#typing").html(data);
+                $("#typinganimation").show();
+                setTimeout(()=>{$("#typinganimation").hide()},10*1000);
+            });
+            
+            socketio.on("online",(data) => {
+                $("#online").html(data + "<br>");
+            });
+            
+            
+        </script>
+    <script>
+        function checkEnter(event){
+            if (event.keyCode == 13) send();
+        }
+        </script>   
+     <script>
+            function signup(){
+                var username = $("#username1").val();
+                var password = $("#password1").val();
+                var fullname = $("#fullname1").val();
+                var email = $("#email1").val();
+
+                if (username1.length < 4 ){
+                    alert ("invalid inputs"+username1);
+                    return
+                }
+                if (password1.length < 4 ){
+                    alert ("invalid password"+password1)
+                }
+                //var account = {username1 : username1, password1 : password1, fullname1:fullname1, email1:email1};
+                socketio.emit("create", fullname,email,username,password);    
+            }
+            socketio.on("login",(data) => {
+                alert("the user signed in successfully"+data.username);
+                $('head').append('<link href="chatbox.css" rel="stylesheet">');
+                $('head').append('<script src="chatbox.js"><\/script>'); 
+                const avatar = data.avatar || 'https://i.pravatar.cc/50?u='+data.username;
+                $('#welcome').html('Welcome <img src="' +avatar+ '"/>' + data.fullname)
+                $('.waiting').hide();
+
+                $('.Login-form').hide();
+                $('.chat-form').show();
+                setTimeout(()=>{
+                    setCurrentUser(data)
+                },
+                1000);
+                
+            });
+            socketio.on("signup",(data)=>{
+                alert("sign up successful"+data);
+                $('.signup-form').hide();
+                $('.Login-form').show();
+                
+            });
+            socketio.on("signup error",(data)=>{
+                alert("Error while signing up!!!! tryagain!!!"+data);
+            });
+            </script>
+            <script>
+                function signin(){
+                    var s_username = $("#signin_username").val();
+                    var s_password = $("#signin_password").val();
+
+                    if(!s_username || !s_password){
+                        alert("Type the credentials without leaving blank");
+                    }
+                    else{
+                    //var sigin_cred = {username2:s_username,password2:s_password};
+                    socketio.emit("loginuser",s_username,s_password);
+                    $('.waiting').show();
+                    console.log("end with the sigin for web!!!!!!")
+                    }
+
+                }
+                socketio.on("login-error",(data)=>{
+                    alert("Login failed - Username not found!!"+data);
+                    $('.waiting').hide();
+
+            })
+            </script>   
+            
+        
+            <script>
+                function sendPrivateChat(receiver, message){
+                    socketio.emit("privatechat",receiver,message,currentUser);
+            }
+                
+                function requestChatHistory(receiver){
+                    console.log("the chat history is username"+receiver+ "currentuser "+currentUser)
+                    socketio.emit("chathistory",receiver,currentUser);
+           }
+            
+            socketio.on("onlineusers",function(userlist){
+                setTimeout(()=>{
+                    displayUserList(userlist);
+                },
+                2000);
+            });
+            socketio.on("updateusers",function(userlist){
+                setTimeout(()=>{
+                    updateUserList(userlist)
+                },
+                100);
+            });
+            socketio.on("privatechat",(sender,message) => {
+                displayFriendMessage(sender,message);
+            });
+
+            socketio.on("chathistory", (sender,message) => {
+                console.log(sender, message)
+                if (message.length == 0){
+                    console.log("No data found");
+                }
+                for (let x in message){
+                    chat = message[x];
+                    //console.log("the chat data of on chat history is "+chat.sender+"receiver"+" "+chat.receiver+" "+"message"+ " "+chat.message+ "current user" + " "+currentUser )
+                    if(chat.sender == sender){
+                        displayFriendMessage(chat.sender,chat.message);
+                    }
+                    else{
+                        displaySelfMessage(chat.receiver,chat.message);
+                    }
+                }
+            });
+            </script> 
+        
+            
+</body>
+</html>
