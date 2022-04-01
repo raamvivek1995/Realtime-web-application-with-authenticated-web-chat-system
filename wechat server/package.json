@@ -1,0 +1,23 @@
+{
+  "name": "nodejs-express",
+  "version": "1.0.0",
+  "description": "Starting Express.js app",
+  "main": "node index.js",
+  "scripts": {
+    "test": "node index.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://bitbucket.org/Vivek_Repository/vivek_repository.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0",
+    "superagent": "^6.1.0"
+  }
+}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+	
+    <meta charset="utf-8">
+    <link rel=stylesheet href="https://udayton-cloud.bitbucket.io/style1.css">
+    <title>CCA-Test page of Vivek Manikandan</title>
+    <script src="https://udayton-cloud.bitbucket.io/clock.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cca-vivek-webchat.herokuapp.com/socket.io/socket.io.js"></script>
+    <script>
+        var socketio = io.connect("wss://https://cca-vivek-webchat.herokuapp.com");
+        </script>
+    <style>
+    
+    .owner{
+        background-color: #4CAF50;
+        font-family:calibri;
+        color: white;
+        padding: 5px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 12px;
+        margin: 4px 2px;
+        cursor: pointer;
+
+    }
+
+    .button{
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        font-family:calibri;
+        padding: 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 12px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+    h2{color:white;
+   text-align:center;
+   font-family:calibri;}
+
+    h3{text-align:center;
+   font-family:calibri;}
+
+    p{text-align:center;
+  font-family:calibri;
+  font-size: 18px;}
+    .round{border-radius: 8px;}
+    #response{background-color: #ff9800;}
+
+</style>
+</head>
+<body>
+
+<div class="container wrapper">
+    <div id="top">
+    <div class= "owner">
+            <h2><b><u>CPS 592 CLOUD COMPUTING AND APPLICATION</u><b></h2>
+            <h1><b>A test webpage for cloud computing and applications - Lab 4 Webchat System</b></h1>
+            <h2><b>By Phu Phung</b></h2>
+            <h1><b>Followed by Vivek Manikandan</b></h1>
+    </div>
+            <div id = "email" onclick="showhideemail()">Show my email</div>
+            <script src = "email.js"></script>
+        
+    </div>
+    <div class="wrapper">
+        <div id="menubar">
+            <canvas id ="analog-clock" width = "150" height = "150" style="background-color:#999"></canvas>
+            </div>
+        </div>
+        <div id="main">
+            Chat message: <input name= "data" onKeypress = "checkEnter(event)" onkeyup="socketio.emit('typing')" id="data">
+            <input class="button round" type= "button" value="Send" onclick="send()">
+            <div id = "typing"></div>
+        </div>
+    </div>
+</div>
+<div id="digital clock"></div>
+            <div id="mydiv"
+	        onclick="document.getElementById('mydiv').innerHTML='Clicked time: '+Date()">
+            click here for current time</div>
+<script>
+function displaytime(){
+	document.getElementById('digital clock').innerHTML = "Current time:"+ new Date();
+}
+setInterval(displaytime,500)
+
+</script>
+
+    <!--form action= "echo.php" method= "POST">
+      Chat message: <input name= "data" onKeypress = "checkEnter(event)" onkeyup="socketio.emit('typing')" id="data">
+      <input class="button round" type= "button" value="Send" onclick="send()">
+      <input class="button round" type= "button" value="jQuery Ajax GET" onclick="jQueryAjax()"-->
+      <!--input class="button round" type= "button" value="jQuery Ajax POST" onclick="jQueryAjaxPost()"-->
+<!--/form-->
+
+<div id = "online"></div>
+<div id="response"></div>
+<script>
+    var canvas = document.getElementById("analog-clock");
+    var ctx = canvas.getContext("2d");
+    var radius = canvas.height / 2;
+    ctx.translate(radius, radius);
+    radius = radius * 0.90;
+    setInterval(drawClock, 1000);
+
+    function drawClock(){
+        drawFace(ctx, radius);
+        drawNumbers(ctx, radius);
+        drawTime(ctx, radius);
+    }
+    </script>
+    <script>
+        function send(){
+            var input = $("#data").val();
+            if (input.length == 0) return;
+            socketio.emit("message",input);
+            $("#data").val("");}
+
+            socketio.on("message" ,(data) => {
+                $("#response").append(data + "<br>");
+            });
+            socketio.on("typing", function(data){
+                $("#typing").html(data);
+                setTimeout(()=> {$("#typing").html("<br>") }, 500);
+            });
+            
+        socketio.on("online",(data) => {
+                $("#online").html(data + "<br>");
+            });
+        </script>
+    <script>
+        function checkEnter(event){
+            if (event.keyCode == 13) send();
+        }
+        </script>    
+</body>
+</html>
